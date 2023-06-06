@@ -30,33 +30,40 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
-    favorites = GenericRelation('Favorite')
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveBigIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    favorite = models.ForeignKey(
+        Advertisement,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
 
-    class Meta:
-        verbose_name = 'Избраное'
-        verbose_name_plural = 'Избранные'
-        ordering = ['-id']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'object_id', 'content_type'],
-                name = 'unique_user_content_type_object_id'
-            )
-        ]
+
+
+
+
+
+    # favorites = GenericRelation('Favorite')
 
 # class Favorite(models.Model):
-#     favorite = models.ForeignKey(
-#         Advertisement,
-#         on_delete=models.CASCADE,
-#         related_name='favorites',
-#     )
-#     user = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.CASCADE,
-#     )
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+#     object_id = models.PositiveBigIntegerField()
+#     content_object = GenericForeignKey('content_type', 'object_id')
+
+#     class Meta:
+#         verbose_name = 'Избраное'
+#         verbose_name_plural = 'Избранные'
+#         ordering = ['-id']
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=['user', 'object_id', 'content_type'],
+#                 name = 'unique_user_content_type_object_id'
+#             )
+#         ]
+
 

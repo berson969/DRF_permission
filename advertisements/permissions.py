@@ -17,11 +17,11 @@ class IsOwnerOrIsStaffOrReadOnly(permissions.BasePermission):
         return obj.creator == request.user
     
 
-class IsNotOwner(permissions.BasePermission):
+# class IsNotOwner(permissions.BasePermission):
        
-    def has_permission(self, request, view, obj):
+#     def has_permission(self, request, view, obj):
         
-        if request.method == 'GET' and obj.creator != request.user or request.user.is_staff:
-            return True
+#         if request.method == 'GET' and obj.creator != request.user or request.user.is_staff:
+#             return True
 
        

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 from rest_framework import serializers
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, Favorite
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer для пользователя."""
@@ -12,12 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
 class AdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
     creator = UserSerializer(read_only=True, )
-    is_favorite = serializers.BooleanField(read_only=True)
+    
 
     class Meta:
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at',  'is_favorite', )
+                  'status', 'created_at',  )
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -38,9 +38,21 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
-    creator = UserSerializer(read_only=True, )
-    is_favorite = serializers.BooleanField(read_only=True)
+    # creator = UserSerializer(read_only=True, )
+    favorite = AdvertisementSerializer(read_only=True,)
+    
 
     class Meta:
-        model = Advertisement
-        fields = ('creator', 'favorite', )
+        model = Favorite
+        fields = ('user', 'favorite', )
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+    def validate(self, data):
+        def validate(self, data):
+            if Advertisement.objects.get(id=data['favorite'].id).creator == data['user']:
+                raise ValidationError("There is owner's advertisement")
+            return data
+        
+        
