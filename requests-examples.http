@@ -94,15 +94,15 @@ Content-Type: application/json
 
 #Получение списка Избранное
 GET {{baseUrl}}/advertisements/favorites/
-# Authorization: Token 6a806cfd2b18cac194d1565917543fb09aaa581d
-Authorization: Token ab80f38682e2fee81bbbd70b4368d7d2207f82bf
+Authorization: Token 6a806cfd2b18cac194d1565917543fb09aaa581d
+# Authorization: Token ab80f38682e2fee81bbbd70b4368d7d2207f82bf
 Content-Type: application/json
 
 ###
 
 #Удаление из Избранного
 DELETE {{baseUrl}}/advertisements/3/delete_favorite/
-# Authorization: Token 6a806cfd2b18cac194d1565917543fb09aaa581d
-Authorization: Token ab80f38682e2fee81bbbd70b4368d7d2207f82bf
+Authorization: Token 6a806cfd2b18cac194d1565917543fb09aaa581d
+# Authorization: Token ab80f38682e2fee81bbbd70b4368d7d2207f82bf
 Content-Type: application/json
 

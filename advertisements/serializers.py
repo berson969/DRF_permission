@@ -38,21 +38,22 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
-    # creator = UserSerializer(read_only=True, )
     favorite = AdvertisementSerializer(read_only=True,)
     
-
     class Meta:
         model = Favorite
         fields = ('user', 'favorite', )
 
     def create(self, validated_data):
         return super().create(validated_data)
+    
+    def delete(self, validated_data):
+        return super().delete(validated_data)
 
     def validate(self, data):
         def validate(self, data):
             if Advertisement.objects.get(id=data['favorite'].id).creator == data['user']:
-                raise ValidationError("There is owner's advertisement")
+                raise ValidationError("It's there is owner's advertisement")
             return data
         
         
