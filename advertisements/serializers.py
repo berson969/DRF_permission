@@ -31,7 +31,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
-        if len(Advertisement.objects.filter(status='OPEN', creator=self.context['request'].user)) > 9 :
+        if len(Advertisement.objects.filter(status='OPEN', creator=self.context['request'].user)) > 9:
             raise ValidationError('У вас не может быть больше 10 открытых объявлений')
         return data
 
@@ -51,9 +51,9 @@ class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
         return super().delete(validated_data)
 
     def validate(self, data):
-        def validate(self, data):
-            if Advertisement.objects.get(id=data['favorite'].id).creator == data['user']:
-                raise ValidationError("It's there is owner's advertisement")
-            return data
+        print(data)
+        if Advertisement.objects.get(id=data['favorite'].id).creator == data['user']:
+            raise ValidationError("It's there is owner's advertisement")
+        return data
         
         

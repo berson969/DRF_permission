@@ -28,6 +28,9 @@ class AdvertisementViewSet(ModelViewSet):
             return [IsAuthenticated(), IsOwnerOrIsStaffOrReadOnly()]
         return []
 
+    def get_queryset(self, *args, **kwargs):
+        return Advertisement.objects.all()
+
     @action(detail=False)
     def favorites(self, request):
         queryset = Favorite.objects.filter(user=request.user)
@@ -47,12 +50,9 @@ class AdvertisementViewSet(ModelViewSet):
 
     @action(methods=['delete'], detail=True)
     def delete_favorite(self, request, pk=None):
-        queryset = Advertisement.objects.filter(id=pk)
+        queryset = Favorite.objects.filter(favorite=pk, user=request.user)
         if queryset:
-            validated_data = {'favorite': queryset, 'user': request.user}
-            serializer = FavoriteAdvertisementSerializer(data=validated_data)
-            serializer.validate(data=validated_data)
-            serializer.delete(validated_data)
-            return Response('The Advertisement deleted from Favorites', status=status.HTTP_201_CREATED)
+            Favorite.delete(Favorite.objects.get(favorite=pk, user=request.user))
+            return Response('The Advertisement deleted from Favorites', status=status.HTTP_200_DELETED)
         return Response('The Advertisement missing in database', status=status.HTTP_204_NO_CONTENT)
 
