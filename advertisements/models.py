@@ -5,11 +5,13 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
+
 class AdvertisementStatusChoices(models.TextChoices):
     """Статусы объявления."""
 
     OPEN = "OPEN", "Открыто"
     CLOSED = "CLOSED", "Закрыто"
+
 
 class Advertisement(models.Model):
     """Объявление."""
@@ -23,6 +25,7 @@ class Advertisement(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        # related_name='creators',
     )
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -30,6 +33,7 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
 
 class Favorite(models.Model):
     favorite = models.ForeignKey(

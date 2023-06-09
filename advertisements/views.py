@@ -3,11 +3,11 @@ from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from advertisements.filters import AdvertisementFilter
+from .filters import AdvertisementFilter
 
-from advertisements.models import Advertisement, Favorite
-from advertisements.permissions import IsOwnerOrIsStaffOrReadOnly # , IsNotOwner,
-from advertisements.serializers import AdvertisementSerializer, FavoriteAdvertisementSerializer
+from .models import Advertisement, Favorite
+from .permissions import IsOwnerOrIsStaffOrReadOnly # , IsNotOwner,
+from .serializers import AdvertisementSerializer, FavoriteAdvertisementSerializer
 
 from rest_framework.decorators import action
 
@@ -39,12 +39,14 @@ class AdvertisementViewSet(ModelViewSet):
     
     @action(methods=['post'], detail=True)
     def add_favorite(self, request, pk=None):
-        queryset = Advertisement.objects.filter(id=pk)
+        queryset = Advertisement.objects.filter(id=pk).first()
         if queryset:
             validated_data = {'favorite': queryset, 'user': request.user}
             serializer = FavoriteAdvertisementSerializer(data=validated_data)
             serializer.validate(data=validated_data)
+            # serializer.is_valid(raise_exception=True)
             serializer.create(validated_data)
+            # serializer.save()
             return Response('The Advertisement added to Favorites', status=status.HTTP_201_CREATED)
         return Response('The Advertisement missing in database', status=status.HTTP_204_NO_CONTENT)
 
@@ -53,6 +55,6 @@ class AdvertisementViewSet(ModelViewSet):
         queryset = Favorite.objects.filter(favorite=pk, user=request.user)
         if queryset:
             Favorite.delete(Favorite.objects.get(favorite=pk, user=request.user))
-            return Response('The Advertisement deleted from Favorites', status=status.HTTP_200_DELETED)
+            return Response('The Advertisement deleted from Favorites', status=status.HTTP_204_NO_CONTENT)
         return Response('The Advertisement missing in database', status=status.HTTP_204_NO_CONTENT)
 

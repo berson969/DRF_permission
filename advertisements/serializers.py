@@ -1,7 +1,15 @@
 from django.contrib.auth.models import User
-from django.forms import ValidationError
-from rest_framework import serializers
-from advertisements.models import Advertisement, Favorite
+# from django.forms import ValidationError
+from rest_framework import serializers, status
+from rest_framework.response import Response
+
+from .models import Advertisement, Favorite
+from rest_framework.exceptions import APIException
+
+
+class ValidationError(APIException):
+    status_code = 400
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer для пользователя."""
@@ -9,15 +17,15 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', )
 
+
 class AdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
     creator = UserSerializer(read_only=True, )
-    
 
     class Meta:
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at',  )
+                  'status', 'created_at',)
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -31,14 +39,15 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
-        if len(Advertisement.objects.filter(status='OPEN', creator=self.context['request'].user)) > 9:
+        if len(Advertisement.objects.filter(status='OPEN', creator=self.context['request'].user)) > 9 \
+                and data['status'] == 'OPEN':
             raise ValidationError('У вас не может быть больше 10 открытых объявлений')
         return data
 
 
 class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
     """Serializer для объявления."""
-    favorite = AdvertisementSerializer(read_only=True,)
+    favorite = AdvertisementSerializer(read_only=True)
     
     class Meta:
         model = Favorite
@@ -47,13 +56,14 @@ class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return super().create(validated_data)
     
-    def delete(self, validated_data):
-        return super().delete(validated_data)
+    # def delete(self, validated_data):
+    #     return super().destoy(validated_data)
 
     def validate(self, data):
-        print(data)
-        if Advertisement.objects.get(id=data['favorite'].id).creator == data['user']:
-            raise ValidationError("It's there is owner's advertisement")
+        if Favorite.objects.filter(user=data['user'], favorite=data['favorite']).exists():
+            raise ValidationError('The Advertisement already is favorite')
+        if data['favorite'].creator == data['user']:
+            raise ValidationError("There is owner's advertisement")
         return data
         
         
