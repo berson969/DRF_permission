@@ -1,0 +1,149 @@
+# примеры API-запросов
+
+@baseUrl = http://localhost:8000/api
+
+# получение объявлений без авторизации
+GET {{baseUrl}}/advertisements/
+
+###
+
+# получение объявлений от  admin
+GET {{baseUrl}}/advertisements/?page=4
+Content-Type: application/json
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# получение объявлений от simplyuser
+GET {{baseUrl}}/advertisements/
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+
+###
+
+# создание объявления от admin
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+{
+  "title": "Зарядки",
+  "description": "Новые"
+
+}
+
+###
+
+# создание объявления от simplyuser
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+{
+  "title": "Детскиу Жакеты",
+  "description": "Импортные"
+}
+
+###
+
+# попытка поменять объявление от simplyuser
+PATCH {{baseUrl}}/advertisements/4/
+Content-Type: application/json
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+{
+  "status": "CLOSED"
+}
+
+
+###
+
+# попытка поменять объявление от admin
+PATCH {{baseUrl}}/advertisements/8/
+Content-Type: application/json
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+{
+  "status": "CLOSED",
+  "description": "Родные"
+}
+
+###
+
+# удалить обьявление от simplyuser
+DELETE {{baseUrl}}/advertisements/8/
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+###
+
+# удалить обьявление от admin
+DELETE {{baseUrl}}/advertisements/3/
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+
+###
+
+# фильтрация по создателю
+GET {{baseUrl}}/advertisements/?creator=2
+Content-Type: application/json
+
+###
+
+# фильтрация по дате
+GET {{baseUrl}}/advertisements/?created_at_before=2022-09-30
+Content-Type: application/json
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# фильтрация по дате от simplyuser
+GET {{baseUrl}}/advertisements/?created_at_before=2022-09-30
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+###
+
+# фильтрация по статусу
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# поиски конкретного обьявления
+GET {{baseUrl}}/advertisements/?id=8
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# добавить в избранное  от  simplyuser
+POST {{baseUrl}}/advertisements/8/add_favorite/
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+###
+
+# добавить в избранное  от  admin
+POST  {{baseUrl}}/advertisements/27/add_favorite/
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# просмотр избранных обьявлений от  simplyuser
+GET {{baseUrl}}/advertisements/get_favorites/
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38
+
+###
+
+# просмотр избранных обьявлений  от  admin
+GET   {{baseUrl}}/advertisements/get_favorites/
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# удалить из  избранного  от  admin
+DELETE  {{baseUrl}}/advertisements/2/destroy_favorite/
+Authorization: Token 18ca5ededede845176e453df189b9499ee5b1954
+
+###
+
+# удалить из  избранного  от  user001
+DELETE  {{baseUrl}}/advertisements/8/delete_favorite/
+Authorization: Token 61340c6095e37b32da7f8561ffa616752ebe6f38

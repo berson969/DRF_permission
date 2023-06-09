@@ -1,0 +1,5 @@
+.env
+advertisements/__pycache__/
+advertisements/migrations/0003_alter_advertisement_id_alter_favorite_id.py
+advertisements/migrations/__pycache__/
+api_with_restrictions/__pycache__/
